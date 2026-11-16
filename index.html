@@ -225,8 +225,7 @@ fieldset.bad .field-error{display:block}
 
 <header class="hero">
   <div class="hero-top"><span>D.LIGHT®</span><span>2026.12</span></div>
-  <button type="button" class="vidbtn" id="vidbtn" aria-pressed="false" hidden>영상 멈춤</button>
-  <div class="hero-art"><video class="heroimg" id="herovid" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="img/hero.jpg" width="1536" height="1024" aria-label="호루라기, 운동화, 퍼즐 조각, 깃발 모양 참이 달린 크롬 키링이 흔들리는 영상"><source src="img/hero.mp4" type="video/mp4"></video></div>
+  <div class="hero-art"><img class="heroimg" src="img/hero.jpg" alt="호루라기, 운동화, 퍼즐 조각, 깃발 모양 참이 달린 크롬 키링" width="1536" height="1024"></div>
   <div class="hero-copy">
     <h1><span class="chrome">D.LIGHT</span><span class="chrome kr">팀 대항전</span><span class="yr">2026 연말 모임, 실내에서</span></h1>
     <p class="lede">가벼운 운동부터 협동 미션, 디자이너의 감각을 활용한 두뇌 게임까지. 팀을 이뤄 몸도 쓰고 머리도 쓰는 실내 팀 대항전을 준비해 보려고 합니다. 12월 토요일 중 언제가 좋은지 먼저 알려 주세요.</p>
@@ -448,18 +447,6 @@ $("#f").addEventListener("submit", async (e) => {
   btn.disabled = false;
 });
 
-// 첫 화면 영상: 사용자가 멈출 수 있고, 안 보일 때는 돌리지 않는다. 단추 글은 실제 재생 상태를 따른다
-(function () {
-  const v = $("#herovid"), b = $("#vidbtn"); let stopped = false, seen = true;
-  const label = () => { b.setAttribute("aria-pressed", String(v.paused)); b.textContent = v.paused ? "영상 재생" : "영상 멈춤"; };
-  const sync = () => { if (!stopped && seen && !document.hidden) { const pr = v.play(); if (pr && pr.catch) pr.catch(label); } else v.pause(); };
-  if (matchMedia("(prefers-reduced-motion:reduce)").matches) { v.removeAttribute("autoplay"); stopped = true; v.pause(); }
-  b.hidden = false; label();
-  ["playing", "pause", "error"].forEach((n) => v.addEventListener(n, label));
-  b.addEventListener("click", () => { stopped = !v.paused; sync(); });
-  document.addEventListener("visibilitychange", sync);
-  if ("IntersectionObserver" in window) new IntersectionObserver((es) => { seen = es[0].isIntersecting; sync(); }, {threshold: 0.05}).observe(v);
-})();
 // ── 스크롤 모션 ──
 (function () {
   if (!document.documentElement.classList.contains("motion")) return;
@@ -492,7 +479,7 @@ $("#f").addEventListener("submit", async (e) => {
     // 첫 화면: 키링은 커지며 천천히, 글은 먼저 올라가며 흐려진다
     const p = Math.max(0, Math.min(1, y / hero.offsetHeight));
     if (p < 1) {
-      art.style.transform = `translate3d(0,${p * 5}%,0)`;
+      art.style.transform = `translate3d(0,${p * 7}%,0) scale(${1 + p * 0.2})`;
       copy.style.transform = `translate3d(0,${-p * 36}px,0)`;
     }
     // 날짜 띠: 스크롤만큼 옆으로
